@@ -1,10 +1,13 @@
 package com.example.adts;
 
 import com.example.interfaces.ListInterface;
+import java.util.Iterator;
+import iterators.*;
 
-public class ArrayBasedList<E> implements ListInterface<E> {
 
-	protected E[] list;               // array to hold this listís elements
+public class ArrayBasedList<E> implements ListInterface<E>, Iterable<E> {
+
+	protected E[] list;               // array to hold this list ís elements
 
 	protected int numElements = 0;    // number of elements in this list
 
@@ -26,9 +29,19 @@ public class ArrayBasedList<E> implements ListInterface<E> {
 		this.initialCapacity = initialCapacity;
 	}
 
+   protected void enLarge() {
+   E[] newBiggerArray = (E[]) new Object[list.length + initialCapacity]; //
+    for (int i = 0; i < list.length; i++) {
+      newBiggerArray[i] = list[i];
+    }
+    list = newBiggerArray;
+    }
 
 	@Override
 	public void add(E element) {
+        if (numElements == list.length) {
+            enLarge();
+        }
 		list[numElements] = element;
 		numElements++;
 	}
@@ -114,6 +127,12 @@ public class ArrayBasedList<E> implements ListInterface<E> {
     		return list[index];
     	}
 	}
+
+    public ArrayIterator<E> iterator() {
+        return new ArrayIterator<E>(list, numElements);
+    }
+
+
 
 
 	@Override
